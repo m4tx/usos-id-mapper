@@ -12,7 +12,7 @@
           crossorigin="anonymous">
 </head>
 <body>
-<nav class="navbar navbar-toggleable-md navbar-light bg-faded">
+<nav class="navbar navbar-light bg-faded">
     <a class="navbar-brand" href="{% url 'index' %}">USOS ID Mapper</a>
 </nav>
 
@@ -20,7 +20,13 @@
     <form action="" method="post">
         {% csrf_token %}
 
-        {% for field in form %}
+        <div class="alert alert-info" role="alert">
+            To obtain the Authorization PIN, <a href="{{ auth_url }}" target="_blank">click here</a>.
+        </div>
+        {% for hidden in form.hidden_fields %}
+            {{ hidden }}
+        {% endfor %}
+        {% for field in form.visible_fields %}
             {% include "form_field.html" %}
         {% endfor %}
 

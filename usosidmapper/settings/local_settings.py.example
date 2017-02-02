@@ -7,5 +7,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+
+# USOS API
+USOS_URL = 'https://apps.usos.uj.edu.pl/'
+USOS_CONSUMER_KEY = ''
+USOS_CONSUMER_SECRET = ''
+
+
 from .base import *
 
