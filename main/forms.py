@@ -2,11 +2,6 @@ from django import forms
 
 
 class IndexForm(forms.Form):
-    usos_auth_pin = forms.IntegerField(
-        label='USOS Authorization PIN',
-        help_text='If not filled out, then only the cache is used. Note that '
-                  'this means that some IDs may fail to be looked up.',
-        required=False)
     id_list = forms.CharField(
         widget=forms.Textarea, label='ID List',
         help_text='List of students IDs to query, one per line.')
