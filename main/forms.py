@@ -5,8 +5,10 @@ from main.fields import RegexField
 
 class IndexForm(forms.Form):
     id_list = forms.CharField(
-        widget=forms.Textarea, label='ID List',
-        help_text='List of students IDs to query, one per line.')
+        help_text='List of students IDs to query, one per line.',
+        label='ID List',
+        widget=forms.Textarea(attrs={
+            'placeholder': 'Random text\n1234567\n7654321'}))
     student_id_regex = RegexField(
         label='Student ID regex',
         help_text='Regular expression used to match the student ID in each '
