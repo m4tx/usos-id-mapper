@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.http import HttpResponse
 from django.views.generic import FormView
 
 from main.api import API
