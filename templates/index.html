@@ -20,9 +20,6 @@
     <form action="" method="post">
         {% csrf_token %}
 
-        <div class="alert alert-info" role="alert">
-            To obtain the Authorization PIN, <a href="{{ auth_url }}" target="_blank">click here</a>.
-        </div>
         {% for hidden in form.hidden_fields %}
             {{ hidden }}
         {% endfor %}
