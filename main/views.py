@@ -9,26 +9,12 @@ class IndexView(FormView):
     template_name = 'index.html'
     form_class = IndexForm
 
-    def __init__(self):
-        super(IndexView, self).__init__()
-        self.api = None
-        self.api_auth_url = None
-
-    def get_initial(self):
-        initial = super().get_initial()
-        self.api = API(settings.USOS_URL, settings.USOS_CONSUMER_KEY,
-                       settings.USOS_CONSUMER_SECRET)
-        return initial
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['auth_url'] = self.api_auth_url
-        return context
-
     def form_valid(self, form):
+        api = API(settings.USOS_URL, settings.USOS_CONSUMER_KEY,
+                  settings.USOS_CONSUMER_SECRET)
         id_list = form.cleaned_data['id_list']
         student_id_regex = form.cleaned_data['student_id_regex']
-        new_id_list = self.api.process_id_list(id_list, student_id_regex)
+        new_id_list = api.process_id_list(id_list, student_id_regex)
         data = form.data.copy()
         data['id_list'] = new_id_list
         form.data = data
