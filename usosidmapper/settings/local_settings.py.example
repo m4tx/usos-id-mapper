@@ -15,4 +15,3 @@ USOS_CONSUMER_SECRET = ''
 
 
 from .base import *
-
