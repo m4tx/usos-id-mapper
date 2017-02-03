@@ -35,7 +35,8 @@ class IndexView(FormView):
         self.api._request_token_secret = self.request.session[
             'request_token_secret']
         id_list = form.cleaned_data['id_list']
-        new_id_list = self.api.process_id_list(id_list)
+        student_id_regex = form.cleaned_data['student_id_regex']
+        new_id_list = self.api.process_id_list(id_list, student_id_regex)
         data = form.data.copy()
         data['id_list'] = new_id_list
         form.data = data

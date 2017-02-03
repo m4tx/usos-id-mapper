@@ -1,3 +1,5 @@
+import re
+
 from django.core.cache import cache
 from usosapi import USOSAPIConnection
 
@@ -15,16 +17,20 @@ class API(USOSAPIConnection):
             return response['items'][0]['user']
         return None
 
-    def process_id_list(self, id_list: str):
+    def process_id_list(self, id_list: str, student_id_regex: str):
+        prog = re.compile(student_id_regex)
         rv = []
-        for student_id in id_list.splitlines():
-            student = cache.get(student_id)
-            if student is None:
-                student = self.get_student(student_id)
-                cache.set(student_id, student, None)
-            if student is None:
-                rv.append(student_id)
-            else:
-                rv.append('{}\t{}'.format(student['first_name'],
-                                          student['last_name']))
+        for line in id_list.splitlines():
+            match = prog.match(line)
+            if match is not None:
+                student_id = match.group(0)
+                student = cache.get(student_id)
+                if student is None:
+                    student = self.get_student(student_id)
+                    cache.set(student_id, student, None)
+                if student is not None:
+                    rv.append('{}\t{}'.format(student['first_name'],
+                                              student['last_name']))
+                    continue
+            rv.append(line)
         return '\n'.join(rv)
