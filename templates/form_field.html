@@ -1,9 +1,16 @@
 {% load widget_tweaks %}
 
 
-<div class="form-group">
-    <label for="{{ field.auto_id }}">{{ field.label }}:</label>
-    {% render_field field class+="form-control" %}
+<div class="form-group{% if field.errors %} has-danger{% endif %}">
+    <label class="form-control-label" for="{{ field.auto_id }}">{{ field.label }}:</label>
+    {% if field.errors %}
+        {% render_field field class+="form-control form-control-danger" %}
+        {% for error in field.errors %}
+            <div class="form-control-feedback">{{ error }}</div>
+        {% endfor %}
+    {% else %}
+        {% render_field field class+="form-control" %}
+    {% endif %}
     {% if field.help_text %}
         <small class="form-text text-muted">
             {{ field.help_text }}
