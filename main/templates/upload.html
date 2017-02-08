@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pdf to csv</title>
+</head>
+<body>
+        <form action="/pdf" enctype="multipart/form-data" method="post">
+            {% csrf_token %}
+            <input name="file" type="file" size="40">
+            <input type="submit" value="Send">
+        </form>
+</body>
+</html>

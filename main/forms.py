@@ -16,3 +16,7 @@ class IndexForm(forms.Form):
                   'database), then the line is left as is.',
         initial=r'\b\d{7,}\b',
         widget=forms.TextInput(attrs={'placeholder': r'\b\d{7,}\b'}))
+
+
+class UploadFileForm(forms.Form):
+    file = forms.FileField
