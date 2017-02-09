@@ -45,6 +45,7 @@ class ProcessPDFView(FormView):
 
             # Process
             sheet = pyexcel.get_sheet(file_name=csv_file.name)
+            sheet.name = 'Output'
             api.process_spreadsheet(sheet)
 
             # Output file
