@@ -5,6 +5,9 @@ names using USOS (Polish: Uniwersytecki System Obsługi Studiów) API.
 
 ## Installation
 For local installation:
+
+Make sure you have git, Python 3.5+ and Java (JRE) installed. Then execute the
+following commands:
 ```
 git clone https://github.com/m4tx/usos-id-mapper.git
 cd usos-id-mapper/usosidmapper/settings
