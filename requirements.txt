@@ -3,6 +3,7 @@ django-redis==4.7.0
 django-widget-tweaks==1.4.1
 -e git+https://github.com/MUCI/usosapi-python@74482224f678a6ceb038563920e02c23e93cebdc#egg=usosapi
 tabula-py==0.4.1
+django-excel==0.0.6
 pyexcel==0.4.4
 pyexcel-ods==0.3.1
 pyexcel-xlsx==0.3.0

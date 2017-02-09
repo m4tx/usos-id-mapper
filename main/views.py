@@ -1,8 +1,8 @@
 import re
 from tempfile import NamedTemporaryFile
 
+import django_excel
 import pyexcel as pyexcel
-from django.http import HttpResponse
 from django.views.generic import FormView
 from tabula import convert_into
 
@@ -56,6 +56,4 @@ class ProcessPDFView(FormView):
                             break
 
             # Output file
-            response = HttpResponse(sheet.csv, content_type='text/csv')
-            response['Content-Disposition'] = 'attachment; filename="output.csv"'
-        return response
+            return django_excel.make_response(sheet, 'csv', file_name='output')
