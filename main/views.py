@@ -1,17 +1,16 @@
-from django.conf import settings
-from django.views.generic import FormView
-from django.shortcuts import render
-from django.http import HttpResponse
-from django.core.cache import cache
-
-from main.api import API
-from main.forms import IndexForm, UploadFileForm
-
-from tabula import convert_into
-from wsgiref.util import FileWrapper
 import csv
 import re
 import tempfile
+from wsgiref.util import FileWrapper
+
+from django.conf import settings
+from django.core.cache import cache
+from django.http import HttpResponse
+from django.views.generic import FormView
+from tabula import convert_into
+
+from main.api import API
+from main.forms import IndexForm, UploadFileForm
 
 
 class IndexView(FormView):
@@ -41,13 +40,15 @@ class ProcessPDFView(FormView):
 def handle_uploaded_file(f):
     api = API(settings.USOS_URL, settings.USOS_CONSUMER_KEY,
               settings.USOS_CONSUMER_SECRET)
-    with tempfile.NamedTemporaryFile(suffix='.pdf', mode='wb') as pdf_file,\
-    	tempfile.NamedTemporaryFile(suffix='.csv', mode='r') as csv_file,\
-    	tempfile.NamedTemporaryFile(suffix='.csv', mode='w+') as output:
+    with tempfile.NamedTemporaryFile(suffix='.pdf', mode='wb') as pdf_file, \
+            tempfile.NamedTemporaryFile(suffix='.csv', mode='r') as csv_file, \
+            tempfile.NamedTemporaryFile(suffix='.csv', mode='w+') as output:
         for chunk in f.chunks():
             pdf_file.write(chunk)
-        convert_into(pdf_file.name, csv_file.name, spreadsheet=True, output_format="csv")
-        '''iterate over all rows and if id student matched then use cache or get_student method and cache'''
+        convert_into(pdf_file.name, csv_file.name, spreadsheet=True,
+                     output_format="csv")
+        # Iterate over all rows and if id student matched then use cache or
+        # get_student method and cache
         student_id_regex = '\d{7,}'
         prog = re.compile(student_id_regex)
         reader = csv.reader(csv_file)
