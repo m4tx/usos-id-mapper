@@ -4,7 +4,6 @@ import tempfile
 from wsgiref.util import FileWrapper
 
 from django.conf import settings
-from django.core.cache import cache
 from django.http import HttpResponse
 from django.views.generic import FormView
 from tabula import convert_into
@@ -58,10 +57,7 @@ def handle_uploaded_file(f):
             res = row
             if match:
                 student_id = match[0]
-                student = cache.get(student_id)
-                if student is None:
-                    student = api.get_student(student_id)
-                    cache.set(student_id, student, None)
+                student = api.get_student(student_id)
                 if student is not None:
                     res.append(student['first_name'])
                     res.append(student['last_name'])

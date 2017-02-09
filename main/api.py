@@ -6,13 +6,17 @@ from usosapi import USOSAPIConnection
 
 class API(USOSAPIConnection):
     def get_student(self, student_id):
-        """Query the student_id in the USOS database.
+        """Query the student_id in the USOS database or get it from cache
 
         :param str student_id: student ID to query
         :return: dictionary containing student's first and last name if they
             were found in the database; `None` otherwise
         :rtype: dict|None
         """
+        cache_student = cache.get(student_id)
+        if cache_student is not None:
+            return cache_student
+
         data = {
             'lang': 'pl',
             'fields': 'items[user[first_name|last_name]]',
@@ -21,7 +25,9 @@ class API(USOSAPIConnection):
         }
         response = self.get('services/users/search2', **data)
         if response['items']:
-            return response['items'][0]['user']
+            student = response['items'][0]['user']
+            cache.set(student_id, student)
+            return student
         return None
 
     def process_id_list(self, id_list, student_id_regex):
@@ -40,10 +46,7 @@ class API(USOSAPIConnection):
             match = prog.match(line)
             if match is not None:
                 student_id = match.group(0)
-                student = cache.get(student_id)
-                if student is None:
-                    student = self.get_student(student_id)
-                    cache.set(student_id, student, None)
+                student = self.get_student(student_id)
                 if student is not None:
                     rv.append('{}\t{}'.format(student['first_name'],
                                               student['last_name']))
