@@ -3,7 +3,6 @@ import re
 import tempfile
 from wsgiref.util import FileWrapper
 
-from django.conf import settings
 from django.http import HttpResponse
 from django.views.generic import FormView
 from tabula import convert_into
@@ -17,8 +16,7 @@ class IndexView(FormView):
     form_class = IndexForm
 
     def form_valid(self, form):
-        api = API(settings.USOS_URL, settings.USOS_CONSUMER_KEY,
-                  settings.USOS_CONSUMER_SECRET)
+        api = API()
         id_list = form.cleaned_data['id_list']
         student_id_regex = form.cleaned_data['student_id_regex']
         new_id_list = api.process_id_list(id_list, student_id_regex)
@@ -37,8 +35,7 @@ class ProcessPDFView(FormView):
 
 
 def handle_uploaded_file(f):
-    api = API(settings.USOS_URL, settings.USOS_CONSUMER_KEY,
-              settings.USOS_CONSUMER_SECRET)
+    api = API()
     with tempfile.NamedTemporaryFile(suffix='.pdf', mode='wb') as pdf_file, \
             tempfile.NamedTemporaryFile(suffix='.csv', mode='r') as csv_file, \
             tempfile.NamedTemporaryFile(suffix='.csv', mode='w+') as output:

@@ -1,10 +1,15 @@
 import re
 
+from django.conf import settings
 from django.core.cache import cache
 from usosapi import USOSAPIConnection
 
 
 class API(USOSAPIConnection):
+    def __init__(self):
+        super().__init__(settings.USOS_URL, settings.USOS_CONSUMER_KEY,
+                         settings.USOS_CONSUMER_SECRET)
+
     def get_student(self, student_id):
         """Query the student_id in the USOS database or get it from cache
 
