@@ -1,14 +1,13 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Pdf to csv</title>
-</head>
-<body>
-        <form action="/pdf" enctype="multipart/form-data" method="post">
-            {% csrf_token %}
-            <input name="file" type="file" size="40">
-            <input type="submit" value="Send">
-        </form>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block pagetitle %}Process PDF{% endblock %}
+
+{% block title %}Process PDF{% endblock %}
+
+{% block navProcessPDF %} active{% endblock %}
+
+{% block content %}
+    <form action="" enctype="multipart/form-data" method="post">
+        {% include 'forms/default_form.html' %}
+    </form>
+{% endblock %}
