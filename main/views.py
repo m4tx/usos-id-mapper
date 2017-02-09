@@ -30,7 +30,7 @@ class IndexView(FormView):
 
 
 class ProcessPDFView(FormView):
-    template_name = 'upload.html'
+    template_name = 'process_pdf.html'
     form_class = UploadFileForm
 
     def form_valid(self, form):
