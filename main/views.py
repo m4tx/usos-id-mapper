@@ -1,6 +1,6 @@
 import csv
 import re
-import tempfile
+from tempfile import NamedTemporaryFile
 from wsgiref.util import FileWrapper
 
 from django.http import HttpResponse
@@ -31,37 +31,39 @@ class ProcessPDFView(FormView):
     form_class = UploadFileForm
 
     def form_valid(self, form):
-        return handle_uploaded_file(form.files['file'])
+        return self.handle_uploaded_file(form.files['file'])
 
+    @staticmethod
+    def handle_uploaded_file(file):
+        api = API()
+        with NamedTemporaryFile(suffix='.pdf', mode='wb') as pdf_file, \
+                NamedTemporaryFile(suffix='.csv', mode='r') as csv_file, \
+                NamedTemporaryFile(suffix='.csv', mode='w+') as output:
+            # Convert PDF to CSV
+            for chunk in file.chunks():
+                pdf_file.write(chunk)
+            convert_into(pdf_file.name, csv_file.name, spreadsheet=True,
+                         output_format='csv')
 
-def handle_uploaded_file(f):
-    api = API()
-    with tempfile.NamedTemporaryFile(suffix='.pdf', mode='wb') as pdf_file, \
-            tempfile.NamedTemporaryFile(suffix='.csv', mode='r') as csv_file, \
-            tempfile.NamedTemporaryFile(suffix='.csv', mode='w+') as output:
-        for chunk in f.chunks():
-            pdf_file.write(chunk)
-        convert_into(pdf_file.name, csv_file.name, spreadsheet=True,
-                     output_format="csv")
-        # Iterate over all rows and if id student matched then use cache or
-        # get_student method and cache
-        student_id_regex = '\d{7,}'
-        prog = re.compile(student_id_regex)
-        reader = csv.reader(csv_file)
-        writer = csv.writer(output, lineterminator='\n')
-        for row in reader:
-            match = list(filter(prog.match, row))
-            res = row
-            if match:
-                student_id = match[0]
-                student = api.get_student(student_id)
-                if student is not None:
-                    res.append(student['first_name'])
-                    res.append(student['last_name'])
-            writer.writerow(res)
-        output.flush()
-        output.seek(0)
-        wrapper = FileWrapper(output)
-        response = HttpResponse(wrapper, content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="output.csv"'
-    return response
+            # Iterate over the rows and if id student matched then use
+            # get_student method to get their name
+            prog = re.compile(r'\d{7,}')
+            reader = csv.reader(csv_file)
+            writer = csv.writer(output, lineterminator='\n')
+            for row in reader:
+                for cell in row:
+                    if prog.match(cell):
+                        student = api.get_student(cell.strip())
+                        if student is not None:
+                            row.append(student['first_name'])
+                            row.append(student['last_name'])
+                            break
+                writer.writerow(row)
+
+            # Output file
+            output.flush()
+            output.seek(0)
+            wrapper = FileWrapper(output)
+            response = HttpResponse(wrapper, content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename="output.csv"'
+        return response
