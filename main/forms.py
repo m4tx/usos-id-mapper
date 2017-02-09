@@ -20,3 +20,6 @@ class IndexForm(forms.Form):
 
 class UploadFileForm(forms.Form):
     file = forms.FileField(help_text='Choose the PDF with tabular data')
+    output_format = forms.ChoiceField(
+        choices=[('csv', 'CSV'), ('xlsx', 'XLSX'), ('ods', 'ODS')],
+        initial='csv', label='Output file format', widget=forms.RadioSelect)

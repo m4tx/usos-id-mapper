@@ -30,10 +30,11 @@ class ProcessPDFView(FormView):
     form_class = UploadFileForm
 
     def form_valid(self, form):
-        return self.handle_uploaded_file(form.files['file'])
+        return self.handle_uploaded_file(form.files['file'],
+                                         form.cleaned_data['output_format'])
 
     @staticmethod
-    def handle_uploaded_file(file):
+    def handle_uploaded_file(file, output_format):
         api = API()
         with NamedTemporaryFile(suffix='.pdf', mode='wb') as pdf_file, \
                 NamedTemporaryFile(suffix='.csv', mode='r') as csv_file:
@@ -56,4 +57,5 @@ class ProcessPDFView(FormView):
                             break
 
             # Output file
-            return django_excel.make_response(sheet, 'csv', file_name='output')
+            return django_excel.make_response(sheet, output_format,
+                                              file_name='output')
