@@ -1,8 +1,7 @@
-import re
 from tempfile import NamedTemporaryFile
 
 import django_excel
-import pyexcel as pyexcel
+import pyexcel
 from django.views.generic import FormView
 from tabula import convert_into
 
@@ -44,17 +43,9 @@ class ProcessPDFView(FormView):
             convert_into(pdf_file.name, csv_file.name, spreadsheet=True,
                          output_format='csv')
 
-            # Iterate over the rows and if id student matched then use
-            # get_student method to get their name
-            prog = re.compile(r'\d{7,}')
+            # Process
             sheet = pyexcel.get_sheet(file_name=csv_file.name)
-            for row in sheet.array:
-                for cell in row:
-                    if prog.match(str(cell)):
-                        student = api.get_student(str(cell).strip())
-                        if student is not None:
-                            row += [student['first_name'], student['last_name']]
-                            break
+            api.process_spreadsheet(sheet)
 
             # Output file
             return django_excel.make_response(sheet, output_format,

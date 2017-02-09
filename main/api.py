@@ -58,3 +58,20 @@ class API(USOSAPIConnection):
                     continue
             rv.append(line)
         return '\n'.join(rv)
+
+    def process_spreadsheet(self, sheet):
+        """Go through rows in the sheet and append student names wherever
+        student ID can be found
+
+        Note that changes are made in the passed sheet object.
+
+        :param pyexcel.Sheet sheet: spreadsheet to process
+        """
+        prog = re.compile(r'\d{7,}')
+        for row in sheet.array:
+            for cell in row:
+                if prog.match(str(cell)):
+                    student = self.get_student(str(cell).strip())
+                    if student is not None:
+                        row += [student['first_name'], student['last_name']]
+                        break
