@@ -14,6 +14,31 @@
     </div>
 
     <form action="" enctype="multipart/form-data" method="post">
-        {% include 'forms/default_form.html' %}
+        {% csrf_token %}
+
+        {% include "forms/form_field.html" with field=form.file %}
+
+        <div class="form-group">
+            <label class="form-control-label" for="id_output_format">Output file format:</label>
+            <div class="custom-controls-stacked">
+                <label class="custom-control custom-radio">
+                    <input checked="checked" id="id_output_format_0" class="custom-control-input" name="output_format" type="radio" value="csv" required />
+                    <span class="custom-control-indicator"></span>
+                    <span class="custom-control-description">CSV</span>
+                </label>
+                <label class="custom-control custom-radio">
+                    <input id="id_output_format_1" name="output_format" class="custom-control-input" type="radio" value="xlsx" required />
+                    <span class="custom-control-indicator"></span>
+                    <span class="custom-control-description">XLSX</span>
+                </label>
+                <label class="custom-control custom-radio">
+                    <input id="id_output_format_2" name="output_format" class="custom-control-input" type="radio" value="ods" required />
+                    <span class="custom-control-indicator"></span>
+                    <span class="custom-control-description">ODS</span>
+                </label>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-lg">Submit</button>
     </form>
 {% endblock %}
