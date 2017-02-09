@@ -30,14 +30,12 @@ class IndexView(FormView):
         return self.render_to_response(self.get_context_data(form=form))
 
 
-def upload_file(request):
-    if request.method == 'POST':
-        form = UploadFileForm(request.POST, request.FILES)
-        if form.is_valid():
-            return handle_uploaded_file(request.FILES['file'])
-    else:
-        form = UploadFileForm()
-    return render(request, 'upload.html', {'form': form})
+class ProcessPDFView(FormView):
+    template_name = 'upload.html'
+    form_class = UploadFileForm
+
+    def form_valid(self, form):
+        return handle_uploaded_file(form.files['file'])
 
 
 def handle_uploaded_file(f):

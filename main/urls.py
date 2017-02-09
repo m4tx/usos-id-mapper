@@ -1,8 +1,8 @@
 from django.conf.urls import url
 
-from main.views import IndexView, upload_file
+from main.views import IndexView, ProcessPDFView
 
 urlpatterns = [
     url('^$', IndexView.as_view(), name='index'),
-    url('^pdf$', upload_file, name='upload_file')
+    url('^pdf/$', ProcessPDFView.as_view(), name='process_pdf')
 ]
