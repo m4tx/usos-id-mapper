@@ -1,8 +1,7 @@
-import csv
 import re
 from tempfile import NamedTemporaryFile
-from wsgiref.util import FileWrapper
 
+import pyexcel as pyexcel
 from django.http import HttpResponse
 from django.views.generic import FormView
 from tabula import convert_into
@@ -37,8 +36,7 @@ class ProcessPDFView(FormView):
     def handle_uploaded_file(file):
         api = API()
         with NamedTemporaryFile(suffix='.pdf', mode='wb') as pdf_file, \
-                NamedTemporaryFile(suffix='.csv', mode='r') as csv_file, \
-                NamedTemporaryFile(suffix='.csv', mode='w+') as output:
+                NamedTemporaryFile(suffix='.csv', mode='r') as csv_file:
             # Convert PDF to CSV
             for chunk in file.chunks():
                 pdf_file.write(chunk)
@@ -48,22 +46,16 @@ class ProcessPDFView(FormView):
             # Iterate over the rows and if id student matched then use
             # get_student method to get their name
             prog = re.compile(r'\d{7,}')
-            reader = csv.reader(csv_file)
-            writer = csv.writer(output, lineterminator='\n')
-            for row in reader:
+            sheet = pyexcel.get_sheet(file_name=csv_file.name)
+            for row in sheet.array:
                 for cell in row:
-                    if prog.match(cell):
-                        student = api.get_student(cell.strip())
+                    if prog.match(str(cell)):
+                        student = api.get_student(str(cell).strip())
                         if student is not None:
-                            row.append(student['first_name'])
-                            row.append(student['last_name'])
+                            row += [student['first_name'], student['last_name']]
                             break
-                writer.writerow(row)
 
             # Output file
-            output.flush()
-            output.seek(0)
-            wrapper = FileWrapper(output)
-            response = HttpResponse(wrapper, content_type='text/csv')
+            response = HttpResponse(sheet.csv, content_type='text/csv')
             response['Content-Disposition'] = 'attachment; filename="output.csv"'
         return response
