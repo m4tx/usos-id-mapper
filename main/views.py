@@ -41,7 +41,7 @@ class ProcessPDFView(FormView):
             for chunk in file.chunks():
                 pdf_file.write(chunk)
             convert_into(pdf_file.name, csv_file.name, spreadsheet=True,
-                         output_format='csv')
+                         pages='all', output_format='csv')
 
             # Process
             sheet = pyexcel.get_sheet(file_name=csv_file.name)
