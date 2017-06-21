@@ -3,6 +3,7 @@ from tempfile import NamedTemporaryFile
 import django_excel
 import pyexcel
 from django.views.generic import FormView
+from django.core.files import File
 from os import path
 from tabula import convert_into
 
@@ -34,7 +35,7 @@ class ProcessPDFView(FormView):
                                          form.cleaned_data['output_format'])
 
     @staticmethod
-    def handle_uploaded_file(file, output_format):
+    def handle_uploaded_file(file: File, output_format):
         api = API()
         with NamedTemporaryFile(suffix='.pdf', mode='wb') as pdf_file, \
                 NamedTemporaryFile(suffix='.csv', mode='r') as csv_file:
