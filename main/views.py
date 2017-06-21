@@ -3,6 +3,7 @@ from tempfile import NamedTemporaryFile
 import django_excel
 import pyexcel
 from django.views.generic import FormView
+from os import path
 from tabula import convert_into
 
 from main.api import API
@@ -49,5 +50,6 @@ class ProcessPDFView(FormView):
             api.process_spreadsheet(sheet)
 
             # Output file
-            return django_excel.make_response(sheet, output_format,
-                                              file_name='output')
+            return django_excel.make_response(
+                sheet, output_format,
+                file_name=path.splitext(path.basename(file.name))[0])
