@@ -8,7 +8,7 @@ For local installation:
 
 Make sure you have git, Python 3.5+ and Java (JRE) installed. Then execute the
 following commands:
-```
+```sh
 git clone https://github.com/m4tx/usos-id-mapper.git
 cd usos-id-mapper/usosidmapper/settings
 cp local_settings.py.example local_settings.py
