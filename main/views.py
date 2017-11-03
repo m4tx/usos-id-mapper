@@ -11,7 +11,7 @@ from main.api import API
 from main.forms import IndexForm, UploadFileForm
 
 
-class IndexView(FormView):
+class ProcessTextView(FormView):
     template_name = 'index.html'
     form_class = IndexForm
 

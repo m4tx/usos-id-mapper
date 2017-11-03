@@ -15,14 +15,14 @@
 </head>
 <body>
 <nav class="navbar navbar-expand navbar-light bg-light">
-    <a class="navbar-brand" href="{% url 'index' %}">USOS ID Mapper</a>
+    <a class="navbar-brand" href="{% url 'process_pdf' %}">USOS ID Mapper</a>
 
     <ul class="navbar-nav mr-auto">
-        <li class="nav-item{% block navText %}{% endblock %}">
-            <a class="nav-link" href="{% url 'index' %}">Text</a>
-        </li>
         <li class="nav-item{% block navProcessPDF %}{% endblock %}">
             <a class="nav-link" href="{% url 'process_pdf' %}">PDF</a>
+        </li>
+        <li class="nav-item{% block navText %}{% endblock %}">
+            <a class="nav-link" href="{% url 'process_text' %}">Text</a>
         </li>
     </ul>
 </nav>
