@@ -1,9 +1,0 @@
-Django==2.0.2
-django-excel==0.0.10
-django-redis==4.8.0
-django-widget-tweaks==1.4.1
-pyexcel==0.5.7
-pyexcel-ods==0.5.2
-pyexcel-xlsx==0.5.5
-tabula-py==1.0.0
--e git+https://github.com/MUCI/usosapi-python@74482224f678a6ceb038563920e02c23e93cebdc#egg=usosapi
