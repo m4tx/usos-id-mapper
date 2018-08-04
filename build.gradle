@@ -2,7 +2,7 @@ group 'pl.m4tx'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.2.41'
+    ext.kotlin_version = '1.2.51'
 
     repositories {
         jcenter()
