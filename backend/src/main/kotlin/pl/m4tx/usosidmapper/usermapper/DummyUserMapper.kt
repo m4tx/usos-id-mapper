@@ -1,7 +1,7 @@
 package pl.m4tx.usosidmapper.usermapper
 
 class DummyUserMapper : UserMapper {
-    override fun prefetchUsers(id: Iterable<String>) {}
+    override fun prefetchUsers(idList: List<String>) {}
 
     override fun getUserById(id: String): User? {
         if (id == "1136132") {

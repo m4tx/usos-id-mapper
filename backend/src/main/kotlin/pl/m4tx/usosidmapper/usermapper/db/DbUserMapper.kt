@@ -14,9 +14,13 @@ class DbUserMapper(
                 .filter { id -> id !in map }
                 .forEach { id -> map[id] = null }
 
-        val users = dbUserRepository.findByUserIdIn(idList)
-        users.forEach { dbUser ->
-            map[dbUser.userId] = dbUserToUser(dbUser)
+        // Only retrieve users that are not prefetched yet
+        val idListFiltered = idList.filter { id -> id !in map }
+        if (!idListFiltered.isEmpty()) {
+            val users = dbUserRepository.findByUserIdIn(idListFiltered)
+            users.forEach { dbUser ->
+                map[dbUser.userId] = dbUserToUser(dbUser)
+            }
         }
     }
 
