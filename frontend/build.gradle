@@ -1,0 +1,93 @@
+buildscript {
+    ext.kotlin_version = '1.2.41'
+
+    repositories {
+        jcenter()
+        maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
+        maven { url "https://nosix.github.io/vue-kotlin/release" }
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        classpath "org.jetbrains.kotlin:kotlin-frontend-plugin:0.0.31"
+        classpath "org.musyozoku:vuekt-plugin:0.1.0"
+    }
+}
+
+group = 'org.jetbrains.kotlin.example'
+version = '0.0.1-SNAPSHOT'
+
+apply plugin: 'kotlin2js'
+apply plugin: 'kotlin-dce-js'
+apply plugin: 'org.jetbrains.kotlin.frontend'
+apply plugin: 'org.musyozoku.vuekt'
+
+repositories {
+    jcenter()
+    maven { url "https://nosix.github.io/vue-kotlin/release" }
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-js:$kotlin_version"
+    testCompile "org.jetbrains.kotlin:kotlin-test-js:$kotlin_version"
+}
+
+kotlinFrontend {
+    downloadNodeJsVersion = "latest"
+
+    npm {
+//        dependency("kotlin", "1.1.0")
+        dependency "style-loader"
+        dependency('vue', '2.5.17')
+
+        devDependency('vue-loader', '*')
+        devDependency('vue-template-compiler', '2.5.17')
+        devDependency('css-loader', '*')
+        devDependency('html-webpack-plugin', '*')
+
+        devDependency("karma")
+    }
+
+    webpackBundle {
+        bundleName = "main"
+        contentPath = file('src/main/web')
+//        mode = 'development'
+        mode = 'production'
+    }
+
+    define "PRODUCTION", false
+    define "X", false
+
+//    rollupBundle {
+//        bundleName = "rolledUp"
+//    }
+
+//    allBundles {
+//        /* set properties for all bundles */
+//    }
+
+//    bundle("someBundler") {
+//        ....
+//    }
+}
+
+compileKotlin2Js {
+    kotlinOptions.metaInfo = true
+    kotlinOptions.outputFile = "$project.buildDir.path/js/${project.name}.js"
+    kotlinOptions.sourceMap = true
+    kotlinOptions.moduleKind = 'commonjs'
+    kotlinOptions.main = "call"
+}
+
+compileTestKotlin2Js {
+    kotlinOptions.metaInfo = true
+    kotlinOptions.outputFile = "$project.buildDir.path/js-tests/${project.name}-tests.js"
+    kotlinOptions.sourceMap = true
+    kotlinOptions.moduleKind = 'commonjs'
+//    kotlinOptions.moduleName = project.name + "-test"
+    kotlinOptions.main = "call"
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '4.3.1'
+}

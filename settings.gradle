@@ -1,2 +1,3 @@
 rootProject.name = 'usosidmapper'
 include 'backend'
+include 'frontend'
